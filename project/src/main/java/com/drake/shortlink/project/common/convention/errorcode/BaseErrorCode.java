@@ -1,4 +1,4 @@
-package com.drake.shortlink.admin.common.convention.errorcode;
+package com.drake.shortlink.project.common.convention.errorcode;
 
 /**
  * 基础错误码定义
@@ -32,10 +32,15 @@ public enum BaseErrorCode implements IErrorCode {
     // ========== 二级宏观错误码 短链接分组错误 ==========
     GID_HAS_EXIST("A000400","分组已存在"),
 
+    // ========== 二级宏观错误码 短链接错误 ==========
+    URI_CREATE_ERROR("A000500","短链接创建失败"),
+
     // ========== 一级宏观错误码 系统执行出错 ==========
     SERVICE_ERROR("B000001", "系统执行出错"),
     // ========== 二级宏观错误码 系统执行超时 ==========
     SERVICE_TIMEOUT_ERROR("B000100", "系统执行超时"),
+    // ========== 二级宏观错误码 短链接创建错误 ==========
+    URL_HAS_EXIST("B000200", "短链接已存在"),
 
     // ========== 一级宏观错误码 调用第三方服务出错 ==========
     REMOTE_ERROR("C000001", "调用第三方服务出错");

@@ -1,4 +1,4 @@
-package com.drake.shortlink.admin.common.config;
+package com.drake.shortlink.project.common.config;
 
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RedissonClient;
@@ -15,8 +15,8 @@ public class RBloomFilterConfiguration {
      * 防止用户注册查询数据库的布隆过滤器
      */
     @Bean
-    public RBloomFilter<String> userRegisterCachePenetrationBloomFilter(RedissonClient redissonClient) {
-        RBloomFilter<String> cachePenetrationBloomFilter = redissonClient.getBloomFilter("short-link-user");
+    public RBloomFilter<String> shortLinkCreateCachePenetrationBloomFilter(RedissonClient redissonClient) {
+        RBloomFilter<String> cachePenetrationBloomFilter = redissonClient.getBloomFilter("short-link-uri");
         cachePenetrationBloomFilter.tryInit(100000000L, 0.001);
         return cachePenetrationBloomFilter;
     }

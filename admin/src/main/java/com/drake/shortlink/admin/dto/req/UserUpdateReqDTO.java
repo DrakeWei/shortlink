@@ -5,10 +5,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
 /**
- * 用户注册请求参数
+ * 用户修改个人信息请求参数
  */
 @Data
-public class UserRegisterReqDTO {
+public class UserUpdateReqDTO {
     /**
      * 用户名
      */

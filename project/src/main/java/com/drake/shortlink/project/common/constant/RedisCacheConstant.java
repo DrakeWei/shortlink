@@ -1,4 +1,4 @@
-package com.drake.shortlink.admin.common.constant;
+package com.drake.shortlink.project.common.constant;
 
 public class RedisCacheConstant {
 
