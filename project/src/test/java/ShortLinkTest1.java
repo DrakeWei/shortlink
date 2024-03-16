@@ -18,7 +18,7 @@ public class ShortLinkTest1 {
     public void save(){
         ShortLinkGotoDO shortLinkGotoDO = ShortLinkGotoDO.builder()
                 .gid("hz09a8")
-                .fullShortUrl("http://google.com/1uGSNX")
+                .fullShortUrl("https://nurl.ink/p6WuC")
                 .build();
         shortLinkGotoService.save(shortLinkGotoDO);
     }

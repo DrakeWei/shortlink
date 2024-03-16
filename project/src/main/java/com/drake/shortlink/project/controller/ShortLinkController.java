@@ -32,7 +32,7 @@ public class ShortLinkController {
      * 创建短链接
      */
     @PostMapping("/api/short-link/v1/create")
-    public Result<ShortLinkCreateRespDTO> createShortLink(@RequestBody ShortLinkCreateReqDTO requestParam) {
+    public Result<ShortLinkCreateRespDTO> createShortLink(@RequestBody ShortLinkCreateReqDTO requestParam) throws IOException {
         return Results.success(shortLinkService.create(requestParam));
 //        HttpRequest httpRequest = HttpUtil.createPost("http://127.0.0.1:8001/api/short-link/v1/create").body(JSON.toJSONString(requestParam));
 //        HttpResponse execute = httpRequest.execute();

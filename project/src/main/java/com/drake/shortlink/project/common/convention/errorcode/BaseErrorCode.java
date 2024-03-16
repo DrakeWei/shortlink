@@ -39,6 +39,14 @@ public enum BaseErrorCode implements IErrorCode {
     // ========== 二级宏观错误码 短链接跳转错误 ==========
     URI_RESTORE_ERROR("A000600","短链接跳转失败"),
 
+    // ========== 二级宏观错误码 回收站错误 ==========
+    RECYCLE_SAVE_ERROR("A000700","回收站回收失败"),
+    RECYCLE_RECOVER_ERROR("A000701","回收站移出失败"),
+    RECYCLE_REMOVE_ERROR("A000702","短链接删除失败"),
+
+    // ========== 二级宏观错误码 短链接监控错误 ==========
+    STATS_UPDATE_ERROR("A000800","监控数据失败"),
+
     // ========== 一级宏观错误码 系统执行出错 ==========
     SERVICE_ERROR("B000001", "系统执行出错"),
     // ========== 二级宏观错误码 系统执行超时 ==========

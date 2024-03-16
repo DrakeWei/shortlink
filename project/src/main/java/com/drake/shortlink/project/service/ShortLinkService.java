@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface ShortLinkService extends IService<ShortLinkDO> {
-    ShortLinkCreateRespDTO create(ShortLinkCreateReqDTO requestParam);
+    ShortLinkCreateRespDTO create(ShortLinkCreateReqDTO requestParam) throws IOException;
 
     IPage<ShortLinkPageRespDTO> pageQuery(ShortLinkPageReqDTO requestParam);
 

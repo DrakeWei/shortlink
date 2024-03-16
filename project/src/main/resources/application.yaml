@@ -11,3 +11,13 @@ spring:
     redis:
       host: 192.168.78.129
       port: 5000
+  spring:
+    mvc:
+      view:
+        prefix: /templates/
+        suffix: .html
+
+short-link:
+  stats:
+    locale:
+      amap-key: 5c31440fac9c414375f6d97b3785bf98
