@@ -1,4 +1,4 @@
-package com.drake.shortlink.project.dao.entity;
+package com.drake.shortlink.admin.dao.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -20,7 +20,6 @@ public class ShortLinkDO {
      * id
      */
     private Long id;
-
     /**
      * 域名
      */

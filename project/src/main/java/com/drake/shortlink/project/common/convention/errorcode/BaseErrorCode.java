@@ -34,6 +34,10 @@ public enum BaseErrorCode implements IErrorCode {
 
     // ========== 二级宏观错误码 短链接错误 ==========
     URI_CREATE_ERROR("A000500","短链接创建失败"),
+    URI_UPDATE_ERROR("A000501","短链接修改错误"),
+
+    // ========== 二级宏观错误码 短链接跳转错误 ==========
+    URI_RESTORE_ERROR("A000600","短链接跳转失败"),
 
     // ========== 一级宏观错误码 系统执行出错 ==========
     SERVICE_ERROR("B000001", "系统执行出错"),

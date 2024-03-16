@@ -6,12 +6,15 @@ import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.drake.shortlink.admin.common.biz.user.UserContext;
 import com.drake.shortlink.admin.common.convention.exception.ClientException;
+import com.drake.shortlink.admin.common.convention.result.Result;
 import com.drake.shortlink.admin.dao.entity.GroupDO;
 import com.drake.shortlink.admin.dao.mapper.GroupMapper;
 import com.drake.shortlink.admin.dto.req.ShortLinkGroupSaveReqDTO;
 import com.drake.shortlink.admin.dto.req.ShortLinkGroupSortReqDTO;
 import com.drake.shortlink.admin.dto.req.ShortLinkGroupUpdateReqDTO;
 import com.drake.shortlink.admin.dto.resp.ShortLinkGroupRespDTO;
+import com.drake.shortlink.admin.remote.dto.ShortLinkRemoteService;
+import com.drake.shortlink.admin.remote.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.drake.shortlink.admin.service.GroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.drake.shortlink.admin.common.convention.errorcode.BaseErrorCode.GID_HAS_EXIST;
+import static com.drake.shortlink.admin.common.convention.errorcode.BaseErrorCode.GROUP_CREATE_ERROR;
 
 /**
  * 短链接分组接口实现层
@@ -27,6 +31,8 @@ import static com.drake.shortlink.admin.common.convention.errorcode.BaseErrorCod
 @Slf4j
 @Service
 public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implements GroupService {
+
+    ShortLinkRemoteService shortLinkRemoteService=new ShortLinkRemoteService() {};
 
     /**
      * 新增短链接分组
@@ -50,11 +56,17 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
         GroupDO groupDO=new GroupDO();
         groupDO.setGid(gid);
         groupDO.setName(requestParam.getName());
+        groupDO.setUsername(UserContext.getUsername());
         groupDO.setSortOrder(0);
         groupDO.setCreateTime(DateTime.now());
         groupDO.setUpdateTime(DateTime.now());
         groupDO.setDelFlag(0);
-        save(groupDO);
+        try {
+            save(groupDO);
+        }
+        catch (Exception e){
+            throw new ClientException(GROUP_CREATE_ERROR);
+        }
     }
 
     /**
@@ -67,7 +79,13 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
         if(groupDOS==null||groupDOS.isEmpty()){
             return Collections.emptyList();
         }
-        return BeanUtil.copyToList(groupDOS, ShortLinkGroupRespDTO.class);
+        List<ShortLinkGroupRespDTO> groupRespDTOList = BeanUtil.copyToList(groupDOS, ShortLinkGroupRespDTO.class); //所有分组
+        List<String> gidList = groupRespDTOList.stream().map(ShortLinkGroupRespDTO::getGid).toList();  //所有分组编号
+        Result<List<ShortLinkGroupCountQueryRespDTO>> listResult = shortLinkRemoteService.listShortLinkGroup(gidList);  //所有分组对应编号+计数
+        for (int i = 0; i < groupRespDTOList.size(); i++) {
+            groupRespDTOList.get(i).setShortLinkCount(listResult.getData().get(i).getShortLinkCount());
+        }
+        return groupRespDTOList;
     }
 
     /**

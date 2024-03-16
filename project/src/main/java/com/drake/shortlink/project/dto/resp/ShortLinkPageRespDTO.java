@@ -1,10 +1,7 @@
-package com.drake.shortlink.project.dao.entity;
+package com.drake.shortlink.project.dto.resp;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,14 +10,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@TableName("t_link")
-public class ShortLinkDO {
-    /**
-     * id
-     */
-    private Long id;
-
+public class ShortLinkPageRespDTO {
     /**
      * 域名
      */
@@ -56,10 +46,6 @@ public class ShortLinkDO {
      */
     private Integer enableStatus;
 
-    /**
-     * 创建类型 0：控制台 1：接口
-     */
-    private Integer createdType;
 
     /**
      * 有效期类型 0：永久有效 1：用户自定义
@@ -69,7 +55,6 @@ public class ShortLinkDO {
     /**
      * 有效期
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date validDate;
 
     /**
@@ -81,19 +66,13 @@ public class ShortLinkDO {
     /**
      * 创建时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 
     /**
      * 修改时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date updateTime;
 
-    /**
-     * 删除标识 0：未删除 1：已删除
-     */
-    private Integer delFlag;
 
     /**
      * 网站图标

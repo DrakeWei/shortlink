@@ -1,4 +1,4 @@
-package com.drake.shortlink.project.dto.req;
+package com.drake.shortlink.admin.remote.dto.req;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

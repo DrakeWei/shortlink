@@ -19,6 +19,7 @@ import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -91,7 +92,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,UserDO> implements U
                 userDO.setCreateTime(DateTime.now());
                 userDO.setUpdateTime(DateTime.now());
                 userDO.setDelFlag(0);
-                boolean saveSuccess = save(userDO);
+                boolean saveSuccess;
+                try {
+                    saveSuccess = save(userDO);
+                }
+                catch (DuplicateKeyException e){
+                    throw new ClientException(USER_NAME_EXIST_ERROR);
+                }
                 if(saveSuccess){
                     userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
                 }
