@@ -45,7 +45,7 @@ public class RecycleBinServiceImpl implements RecycleBinService {
         ShortLinkDO shortLinkDO = ShortLinkDO.builder()
                 .gid(requestParam.getGid())
                 .fullShortUrl(requestParam.getFullShortUrl())
-                .enableStatus(0)
+                .enableStatus(1)
                 .updateTime(DateTime.now())
                 .build();
         try {
@@ -69,7 +69,7 @@ public class RecycleBinServiceImpl implements RecycleBinService {
     public IPage<ShortLinkPageRespDTO> pageQuery(RecycleBinPageReqDTO requestParam) {
         LambdaQueryWrapper<ShortLinkDO> lambdaQueryWrapper = Wrappers.lambdaQuery(ShortLinkDO.class)
                 .in(ShortLinkDO::getGid,requestParam.getGidList())
-                .eq(ShortLinkDO::getEnableStatus, 0)
+                .eq(ShortLinkDO::getEnableStatus, 1)
                 .orderByDesc(ShortLinkDO::getUpdateTime);
         IPage<ShortLinkDO> selectPage = shortLinkMapper.selectPage(requestParam, lambdaQueryWrapper);
         return selectPage.convert(each-> BeanUtil.toBean(each,ShortLinkPageRespDTO.class));
@@ -84,7 +84,7 @@ public class RecycleBinServiceImpl implements RecycleBinService {
         ShortLinkDO shortLinkDO = ShortLinkDO.builder()
                 .gid(requestParam.getGid())
                 .fullShortUrl(requestParam.getFullShortUrl())
-                .enableStatus(1)
+                .enableStatus(0)
                 .updateTime(DateTime.now())
                 .build();
         try {

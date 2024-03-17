@@ -31,7 +31,8 @@ public enum BaseErrorCode implements IErrorCode {
 
     // ========== 二级宏观错误码 短链接分组错误 ==========
     GID_HAS_EXIST("A000400","分组已存在"),
-    GROUP_CREATE_ERROR("A000400","分组创建失败"),
+    GROUP_CREATE_ERROR("A000401","分组创建失败"),
+    GROUP_QUERY_ERROR("A000402","分组查询失败"),
 
     // ========== 一级宏观错误码 系统执行出错 ==========
     SERVICE_ERROR("B000001", "系统执行出错"),

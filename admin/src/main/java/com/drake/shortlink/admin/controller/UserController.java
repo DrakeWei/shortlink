@@ -1,10 +1,12 @@
 package com.drake.shortlink.admin.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.drake.shortlink.admin.common.convention.result.Result;
 import com.drake.shortlink.admin.common.convention.result.Results;
 import com.drake.shortlink.admin.dto.req.UserLoginReqDTO;
 import com.drake.shortlink.admin.dto.req.UserRegisterReqDTO;
 import com.drake.shortlink.admin.dto.req.UserUpdateReqDTO;
+import com.drake.shortlink.admin.dto.resp.UserActualRespDTO;
 import com.drake.shortlink.admin.dto.resp.UserLoginRespDTO;
 import com.drake.shortlink.admin.dto.resp.UserRespDTO;
 import com.drake.shortlink.admin.service.UserService;
@@ -29,6 +31,11 @@ public class UserController {
         return Results.success(userRespDTO);
     }
 
+    @GetMapping("/api/short-link/admin/v1/actual/user/{username}")
+    public Result<UserActualRespDTO> getActualUserByUsername(@PathVariable("username") String username) {
+        return Results.success(BeanUtil.toBean(userService.getUserByUsername(username), UserActualRespDTO.class));
+    }
+
     @GetMapping("/api/short-link/admin/v1/user/has-username")
     public Result<Boolean> hasUsername(@RequestParam String username){
         return Results.success(userService.hasUsername(username));
@@ -46,7 +53,7 @@ public class UserController {
         return Results.success();
     }
 
-    @GetMapping("/api/short-link/admin/v1/user/login")
+    @PostMapping("/api/short-link/admin/v1/user/login")
     public Result<UserLoginRespDTO> login(@RequestBody UserLoginReqDTO requestParam){
         return Results.success(userService.login(requestParam));
     }

@@ -5,11 +5,10 @@ import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.drake.shortlink.admin.common.convention.result.Result;
 import com.drake.shortlink.admin.remote.dto.req.*;
-import com.drake.shortlink.admin.remote.dto.resp.ShortLinkCreateRespDTO;
-import com.drake.shortlink.admin.remote.dto.resp.ShortLinkGroupCountQueryRespDTO;
-import com.drake.shortlink.admin.remote.dto.resp.ShortLinkPageRespDTO;
+import com.drake.shortlink.admin.remote.dto.resp.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -113,5 +112,58 @@ public interface ShortLinkRemoteService {
      */
     default void removeShortLink(RecycleBinRemoveReqDTO requestParam){
         HttpUtil.post("http://127.0.0.1:8001/api/short-link/v1/recycle-bin/remove", JSONUtil.toJsonStr(requestParam));
+    }
+
+    default Result<ShortLinkStatsRespDTO> oneShortLinkStats(String fullShortUrl, String gid, String startDate, String endDate){
+        Map<String, Object>map=new HashMap<>();
+        map.put("gid",gid);
+        map.put("fullShortUrl",fullShortUrl);
+        map.put("startDate",startDate);
+        map.put("endDate",endDate);
+        String jsonObject = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/stats", map);
+        return JSON.parseObject(jsonObject, new TypeReference<>() {
+        });
+    }
+
+    default Result<ShortLinkStatsRespDTO> groupShortLinkStats(String gid, String startDate, String endDate){
+        Map<String, Object>map=new HashMap<>();
+        map.put("gid",gid);
+        map.put("startDate",startDate);
+        map.put("endDate",endDate);
+        String jsonObject = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/stats/group", map);
+        return JSON.parseObject(jsonObject, new TypeReference<>() {
+        });
+    }
+
+    default Result<Page<ShortLinkStatsAccessRecordRespDTO>> shortLinkStatsAccessRecord(String fullShortUrl, String gid, String startDate, String endDate){
+        Map<String, Object>map=new HashMap<>();
+        map.put("gid",gid);
+        map.put("fullShortUrl",fullShortUrl);
+        map.put("startDate",startDate);
+        map.put("endDate",endDate);
+        String jsonObject = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/stats/group", map);
+        return JSON.parseObject(jsonObject, new TypeReference<>() {
+        });
+    }
+
+    default Result<Page<ShortLinkStatsAccessRecordRespDTO>> groupShortLinkStatsAccessRecord(String gid, String startDate, String endDate){
+        Map<String, Object>map=new HashMap<>();
+        map.put("gid",gid);
+        map.put("startDate",startDate);
+        map.put("endDate",endDate);
+        String jsonObject = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/stats/access-record/group", map);
+        return JSON.parseObject(jsonObject, new TypeReference<>() {
+        });
+    }
+
+    /**
+     * 远程调用批量创建短链接服务
+     * @param requestParam
+     * @return
+     */
+    default Result<ShortLinkBatchCreateRespDTO> batchCreateShortLink(ShortLinkBatchCreateReqDTO requestParam){
+        String jsonObject = HttpUtil.post("http://127.0.0.1:8001/api/short-link/v1/create/batch", JSONUtil.toJsonStr(requestParam));
+        return JSON.parseObject(jsonObject, new TypeReference<>() {
+        });
     }
 }

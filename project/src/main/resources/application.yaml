@@ -21,3 +21,6 @@ short-link:
   stats:
     locale:
       amap-key: 5c31440fac9c414375f6d97b3785bf98
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml

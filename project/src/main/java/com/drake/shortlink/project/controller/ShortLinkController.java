@@ -3,13 +3,14 @@ package com.drake.shortlink.project.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.drake.shortlink.project.common.convention.result.Result;
 import com.drake.shortlink.project.common.convention.result.Results;
+import com.drake.shortlink.project.dto.req.ShortLinkBatchCreateReqDTO;
 import com.drake.shortlink.project.dto.req.ShortLinkCreateReqDTO;
 import com.drake.shortlink.project.dto.req.ShortLinkPageReqDTO;
 import com.drake.shortlink.project.dto.req.ShortLinkUpdateReqDTO;
+import com.drake.shortlink.project.dto.resp.ShortLinkBatchCreateRespDTO;
 import com.drake.shortlink.project.dto.resp.ShortLinkCreateRespDTO;
 import com.drake.shortlink.project.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.drake.shortlink.project.dto.resp.ShortLinkPageRespDTO;
-import com.drake.shortlink.project.service.ShortLinkGotoService;
 import com.drake.shortlink.project.service.ShortLinkService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.ServletRequest;
@@ -24,9 +25,6 @@ public class ShortLinkController {
 
     @Resource
     private ShortLinkService shortLinkService;
-
-    @Resource
-    private ShortLinkGotoService shortLinkGotoService;
 
     /**
      * 创建短链接
@@ -70,5 +68,10 @@ public class ShortLinkController {
     public Result<Void> restoreUrl(@PathVariable("short-uri") String shortUri, ServletRequest servletRequest, ServletResponse servletResponse) throws IOException {
         shortLinkService.restoreUrl(shortUri,servletRequest,servletResponse);
         return Results.success();
+    }
+
+    @PostMapping("/api/short-link/v1/create/batch")
+    public Result<ShortLinkBatchCreateRespDTO> batchCreateShortLink(@RequestBody ShortLinkBatchCreateReqDTO requestParam) {
+        return Results.success(shortLinkService.batchCreateShortLink(requestParam));
     }
 }

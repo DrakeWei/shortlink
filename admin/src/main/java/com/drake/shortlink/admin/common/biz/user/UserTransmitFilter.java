@@ -7,6 +7,7 @@ import com.drake.shortlink.admin.dao.entity.UserDO;
 import com.google.common.collect.Lists;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.util.Objects;
 import static com.drake.shortlink.admin.common.constant.RedisCacheConstant.USER_LOGIN_TOKEN;
 import static com.drake.shortlink.admin.common.convention.errorcode.BaseErrorCode.IDEMPOTENT_TOKEN_NULL_ERROR;
 
+@Slf4j
 public class UserTransmitFilter implements Filter {
 
     private final StringRedisTemplate stringRedisTemplate;

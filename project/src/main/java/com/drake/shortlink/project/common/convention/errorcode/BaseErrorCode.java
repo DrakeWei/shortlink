@@ -46,6 +46,7 @@ public enum BaseErrorCode implements IErrorCode {
 
     // ========== 二级宏观错误码 短链接监控错误 ==========
     STATS_UPDATE_ERROR("A000800","监控数据失败"),
+    STATS_GET_ERROR("A000801","监控数据获取失败"),
 
     // ========== 一级宏观错误码 系统执行出错 ==========
     SERVICE_ERROR("B000001", "系统执行出错"),

@@ -22,8 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 
-import static com.drake.shortlink.admin.common.convention.errorcode.BaseErrorCode.GID_HAS_EXIST;
-import static com.drake.shortlink.admin.common.convention.errorcode.BaseErrorCode.GROUP_CREATE_ERROR;
+import static com.drake.shortlink.admin.common.convention.errorcode.BaseErrorCode.*;
 
 /**
  * 短链接分组接口实现层
@@ -82,6 +81,9 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
         List<ShortLinkGroupRespDTO> groupRespDTOList = BeanUtil.copyToList(groupDOS, ShortLinkGroupRespDTO.class); //所有分组
         List<String> gidList = groupRespDTOList.stream().map(ShortLinkGroupRespDTO::getGid).toList();  //所有分组编号
         Result<List<ShortLinkGroupCountQueryRespDTO>> listResult = shortLinkRemoteService.listShortLinkGroup(gidList);  //所有分组对应编号+计数
+        if(listResult==null){
+            throw new ClientException(GROUP_QUERY_ERROR);
+        }
         for (int i = 0; i < groupRespDTOList.size(); i++) {
             groupRespDTOList.get(i).setShortLinkCount(listResult.getData().get(i).getShortLinkCount());
         }
