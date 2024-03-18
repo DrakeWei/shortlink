@@ -8,6 +8,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -25,6 +26,7 @@ import com.drake.shortlink.project.dto.req.ShortLinkCreateReqDTO;
 import com.drake.shortlink.project.dto.req.ShortLinkPageReqDTO;
 import com.drake.shortlink.project.dto.req.ShortLinkUpdateReqDTO;
 import com.drake.shortlink.project.dto.resp.*;
+import com.drake.shortlink.project.handler.CustomBlockHandler;
 import com.drake.shortlink.project.service.LinkStatsTodayService;
 import com.drake.shortlink.project.service.ShortLinkGotoService;
 import com.drake.shortlink.project.service.ShortLinkService;
@@ -118,6 +120,11 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
      * @return
      */
     @Override
+    @SentinelResource(
+            value = "create_short-link",
+            blockHandler = "createShortLinkBlockHandlerMethod",
+            blockHandlerClass = CustomBlockHandler.class
+    )
     public ShortLinkCreateRespDTO create(ShortLinkCreateReqDTO requestParam) throws IOException {
         // TODO 禁止生成非法网站的短链接
         String suffix = generateSuffix(requestParam.getOriginUrl(), requestParam.getDomain());
