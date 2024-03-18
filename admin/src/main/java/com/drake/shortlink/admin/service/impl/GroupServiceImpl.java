@@ -20,6 +20,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -40,6 +41,9 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
     @Resource
     private RedissonClient redissonClient;
 
+    @Value("${short-link.group.max-num}")
+    private Long groupMaxNum;
+
     /**
      * 新增短链接分组
      * @param requestParam
@@ -53,7 +57,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
             try {
                 Long groupNum = query().eq("username", UserContext.getUsername()).count();
                 //限制一个用户最多有10个分组
-                if(groupNum >= 10){
+                if(groupNum >= groupMaxNum){
                     throw new ClientException(GROUP_CREATE_ERROR);
                 }
                 GroupDO hasGid = query().eq("username", UserContext.getUsername()).eq("name", requestParam.getName()).one();
