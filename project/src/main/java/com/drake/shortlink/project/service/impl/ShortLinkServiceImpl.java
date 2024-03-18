@@ -193,15 +193,18 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     @Override
     public void updateShortLink(ShortLinkUpdateReqDTO requestParam) {
         // 查询原纪录
-        ShortLinkDO originShortLink = query().eq("full_short_url", requestParam.getFullShortUrl()).one();
+        ShortLinkDO originShortLink = query()
+                .eq("gid", requestParam.getOriginGid())
+                .eq("enable_status",0)
+                .eq("del_flag",0).one();
         if(originShortLink==null){
             throw new ClientException(URI_UPDATE_ERROR);
         }
         ShortLinkDO shortLinkDO=new ShortLinkDO();
         BeanUtil.copyProperties(requestParam,shortLinkDO);
-        // 需判断是否修改 gid;  若未修改，则可按gid分表查询;否则gid失效，需按full_short_url查询;
-        if(Objects.equals(originShortLink.getGid(),requestParam.getGid())){
-            // TODO 似乎可以不修改短链接，即使修改了originUrl，也不修改短链接;
+        // 需判断是否修改 gid;  若未修改，则可直接修改原纪录 ;否则gid失效，需将原纪录逻辑删除并新增记录;
+        if(Objects.equals(requestParam.getOriginGid(),requestParam.getGid())){
+            // 域名无法修改，由服务器决定
             try {
                 shortLinkDO.setUpdateTime(DateTime.now());
                 // 需判断是否将有效期设置为永久;  若设置为永久，validDate字段设置为空
@@ -219,7 +222,9 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         }
         else{
             try {
-                update().eq("gid",originShortLink.getGid()).set("del_flag",1).update();
+                update().eq("gid",originShortLink.getGid())
+                        .eq("full_short_url",originShortLink.getFullShortUrl())
+                        .set("del_flag",1).update();
                 if(!Objects.equals(originShortLink.getOriginUrl(),requestParam.getOriginUrl())){
                     shortLinkDO.setFullShortUrl(requestParam.getOriginUrl()+shortLinkDO.getShortUri());
                 }
