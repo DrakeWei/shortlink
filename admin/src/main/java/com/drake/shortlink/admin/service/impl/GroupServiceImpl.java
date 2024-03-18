@@ -16,12 +16,16 @@ import com.drake.shortlink.admin.dto.resp.ShortLinkGroupRespDTO;
 import com.drake.shortlink.admin.remote.dto.ShortLinkRemoteService;
 import com.drake.shortlink.admin.remote.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.drake.shortlink.admin.service.GroupService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
 
+import static com.drake.shortlink.admin.common.constant.RedisCacheConstant.GROUP_CREATE_LOCK;
 import static com.drake.shortlink.admin.common.convention.errorcode.BaseErrorCode.*;
 
 /**
@@ -33,6 +37,9 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
 
     ShortLinkRemoteService shortLinkRemoteService=new ShortLinkRemoteService() {};
 
+    @Resource
+    private RedissonClient redissonClient;
+
     /**
      * 新增短链接分组
      * @param requestParam
@@ -40,31 +47,40 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
     @Override
     public void saveGroup(ShortLinkGroupSaveReqDTO requestParam) {
         // TODO 需判断当前用户是否已创建过同名的短链接分组
-        GroupDO hasGid = query().eq("username", UserContext.getUsername()).eq("name", requestParam.getName()).one();
-        if(hasGid != null){
-            throw new ClientException(GID_HAS_EXIST);
-        }
-        String gid;
-        while(true){
-            gid = RandomUtil.randomString(6);
-            GroupDO groupDO = query().eq("gid", gid).one();
-            if(groupDO==null){
-                break;
+        RLock lock = redissonClient.getLock(GROUP_CREATE_LOCK + UserContext.getUsername());
+        boolean isLock = lock.tryLock();
+        if (isLock){
+            try {
+                Long groupNum = query().eq("username", UserContext.getUsername()).count();
+                //限制一个用户最多有10个分组
+                if(groupNum >= 10){
+                    throw new ClientException(GROUP_CREATE_ERROR);
+                }
+                GroupDO hasGid = query().eq("username", UserContext.getUsername()).eq("name", requestParam.getName()).one();
+                if(hasGid != null){
+                    throw new ClientException(GID_HAS_EXIST);
+                }
+                String gid;
+                while(true){
+                    gid = RandomUtil.randomString(6);
+                    GroupDO groupDO = query().eq("gid", gid).one();
+                    if(groupDO==null){
+                        break;
+                    }
+                }
+                GroupDO groupDO=new GroupDO();
+                groupDO.setGid(gid);
+                groupDO.setName(requestParam.getName());
+                groupDO.setUsername(UserContext.getUsername());
+                groupDO.setSortOrder(0);
+                groupDO.setCreateTime(DateTime.now());
+                groupDO.setUpdateTime(DateTime.now());
+                groupDO.setDelFlag(0);
+                save(groupDO);
             }
-        }
-        GroupDO groupDO=new GroupDO();
-        groupDO.setGid(gid);
-        groupDO.setName(requestParam.getName());
-        groupDO.setUsername(UserContext.getUsername());
-        groupDO.setSortOrder(0);
-        groupDO.setCreateTime(DateTime.now());
-        groupDO.setUpdateTime(DateTime.now());
-        groupDO.setDelFlag(0);
-        try {
-            save(groupDO);
-        }
-        catch (Exception e){
-            throw new ClientException(GROUP_CREATE_ERROR);
+            finally {
+                lock.unlock();
+            }
         }
     }
 

@@ -119,6 +119,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
      */
     @Override
     public ShortLinkCreateRespDTO create(ShortLinkCreateReqDTO requestParam) throws IOException {
+        // TODO 禁止生成非法网站的短链接
         String suffix = generateSuffix(requestParam.getOriginUrl(), requestParam.getDomain());
         if(suffix==null){
             throw new ClientException(URI_CREATE_ERROR);
@@ -166,12 +167,6 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
      */
     @Override
     public IPage<ShortLinkPageRespDTO> pageQuery(ShortLinkPageReqDTO requestParam) {
-//        LambdaQueryWrapper<ShortLinkDO> lambdaQueryWrapper = Wrappers.lambdaQuery(ShortLinkDO.class)
-//                .eq(ShortLinkDO::getGid, requestParam.getGid())
-//                .eq(ShortLinkDO::getDelFlag, 0)
-//                .orderByDesc(ShortLinkDO::getUpdateTime);
-//        IPage<ShortLinkDO> selectPage = baseMapper.selectPage(requestParam, lambdaQueryWrapper);
-//        return selectPage.convert(each->BeanUtil.toBean(each,ShortLinkPageRespDTO.class));
         IPage<ShortLinkDO> resultPage = baseMapper.pageLink(requestParam);
         return resultPage.convert(each -> {
             ShortLinkPageRespDTO result = BeanUtil.toBean(each, ShortLinkPageRespDTO.class);
