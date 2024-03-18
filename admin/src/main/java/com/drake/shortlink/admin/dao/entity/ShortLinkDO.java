@@ -95,6 +95,11 @@ public class ShortLinkDO {
     private Integer delFlag;
 
     /**
+     * 删除时间戳
+     */
+    private Date delTime;
+
+    /**
      * 网站图标
      */
     private String favicon;

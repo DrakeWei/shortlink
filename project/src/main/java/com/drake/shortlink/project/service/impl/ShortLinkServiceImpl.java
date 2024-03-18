@@ -224,7 +224,8 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             try {
                 update().eq("gid",originShortLink.getGid())
                         .eq("full_short_url",originShortLink.getFullShortUrl())
-                        .set("del_flag",1).update();
+                        .set("del_flag",1)
+                        .set("del_time",DateTime.now()).update();
                 if(!Objects.equals(originShortLink.getOriginUrl(),requestParam.getOriginUrl())){
                     shortLinkDO.setFullShortUrl(requestParam.getOriginUrl()+shortLinkDO.getShortUri());
                 }

@@ -106,11 +106,12 @@ public class RecycleBinServiceImpl implements RecycleBinService {
     @Override
     public void removeShortLink(RecycleBinRemoveReqDTO requestParam) {
         // 逻辑删除 <--?--> 物理删除
-        ShortLinkDO shortLinkDO = ShortLinkDO.builder().delFlag(1).build();
+        ShortLinkDO shortLinkDO = ShortLinkDO.builder().delFlag(1).delTime(DateTime.now()).build();
         try {
             shortLinkService.update()
                     .eq("gid",requestParam.getGid())
                     .eq("full_short_url",requestParam.getFullShortUrl())
+                    .eq("enable_status",1)
                     .update(shortLinkDO);
         }
         catch (Exception e){
