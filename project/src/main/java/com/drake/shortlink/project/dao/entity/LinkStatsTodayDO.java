@@ -48,4 +48,9 @@ public class LinkStatsTodayDO {
      * 今日ip数
      */
     private Integer todayUip;
+
+    /**
+     * 删除标识
+     */
+    private Integer delFlag;
 }

@@ -12,4 +12,6 @@ public class RedisCacheConstant {
     public static final String LINK_STATS_UV="link:stats:uv:";
     //短链接IP数据监控KEY
     public static final String LINK_STATS_IP="link:stats:ip:";
+    //短链接编辑查询时的读写锁
+    public static final String LINK_UPDATE_LOCK="lock:link:update:";
 }
