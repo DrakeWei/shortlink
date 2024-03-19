@@ -8,6 +8,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -25,6 +26,7 @@ import com.drake.shortlink.project.dto.req.ShortLinkCreateReqDTO;
 import com.drake.shortlink.project.dto.req.ShortLinkPageReqDTO;
 import com.drake.shortlink.project.dto.req.ShortLinkUpdateReqDTO;
 import com.drake.shortlink.project.dto.resp.*;
+import com.drake.shortlink.project.handler.CustomBlockHandler;
 import com.drake.shortlink.project.service.LinkStatsTodayService;
 import com.drake.shortlink.project.service.ShortLinkGotoService;
 import com.drake.shortlink.project.service.ShortLinkService;
@@ -54,6 +56,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -127,11 +130,12 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
      * @return
      */
     @Override
-//    @SentinelResource(
-//            value = "create_short-link",
-//            blockHandler = "createShortLinkBlockHandlerMethod",
-//            blockHandlerClass = CustomBlockHandler.class
-//    )
+    @SentinelResource(
+            value = "create_short-link",
+            blockHandler = "createShortLinkBlockHandlerMethod",
+            blockHandlerClass = CustomBlockHandler.class
+    )
+    @Transactional(rollbackFor = Exception.class)
     public ShortLinkCreateRespDTO create(ShortLinkCreateReqDTO requestParam) throws IOException {
         // TODO 禁止生成非法网站的短链接
         String suffix = generateSuffix(requestParam.getOriginUrl(), requestParam.getDomain());
@@ -215,6 +219,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
      * @param requestParam
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateShortLink(ShortLinkUpdateReqDTO requestParam) {
         // 查询原纪录
         ShortLinkDO originShortLink = query()
@@ -471,6 +476,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
      */
     @SneakyThrows
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void saveShortLinkStats(LinkStatsMessage linkStatsMessage) {
         // 在往日志中记录时需要先得到读锁,若此时被写锁占有,无法记录
         RReadWriteLock readWriteLock = redissonClient.getReadWriteLock(LINK_UPDATE_LOCK + linkStatsMessage.getFullShortUrl());
@@ -693,7 +699,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             if (generateCount > 10) {
                 return null;
             }
-            String hashUrl = originUrl + System.currentTimeMillis();
+            String hashUrl = originUrl + System.currentTimeMillis() + UUID.randomUUID();
             uri = HashUtil.hashToBase62(hashUrl);
             if (!shortLinkCreateCachePenetrationBloomFilter.contains(domain + "/" + uri)) {
                 shortLinkCreateCachePenetrationBloomFilter.add(domain + "/" + uri);

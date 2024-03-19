@@ -1,4 +1,4 @@
-package com.drake.shortlink.admin.remote.dto;
+package com.drake.shortlink.admin.remote;
 
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;

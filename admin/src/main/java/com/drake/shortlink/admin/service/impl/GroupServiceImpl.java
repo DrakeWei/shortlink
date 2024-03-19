@@ -13,7 +13,7 @@ import com.drake.shortlink.admin.dto.req.ShortLinkGroupSaveReqDTO;
 import com.drake.shortlink.admin.dto.req.ShortLinkGroupSortReqDTO;
 import com.drake.shortlink.admin.dto.req.ShortLinkGroupUpdateReqDTO;
 import com.drake.shortlink.admin.dto.resp.ShortLinkGroupRespDTO;
-import com.drake.shortlink.admin.remote.dto.ShortLinkRemoteService;
+import com.drake.shortlink.admin.remote.ShortLinkActualRemoteService;
 import com.drake.shortlink.admin.remote.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.drake.shortlink.admin.service.GroupService;
 import jakarta.annotation.Resource;
@@ -36,7 +36,8 @@ import static com.drake.shortlink.admin.common.convention.errorcode.BaseErrorCod
 @Service
 public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implements GroupService {
 
-    ShortLinkRemoteService shortLinkRemoteService=new ShortLinkRemoteService() {};
+    @Resource
+    private ShortLinkActualRemoteService shortLinkActualRemoteService;
 
     @Resource
     private RedissonClient redissonClient;
@@ -100,7 +101,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
         }
         List<ShortLinkGroupRespDTO> groupRespDTOList = BeanUtil.copyToList(groupDOS, ShortLinkGroupRespDTO.class); //所有分组
         List<String> gidList = groupRespDTOList.stream().map(ShortLinkGroupRespDTO::getGid).toList();  //所有分组编号
-        Result<List<ShortLinkGroupCountQueryRespDTO>> listResult = shortLinkRemoteService.listShortLinkGroup(gidList);  //所有分组对应编号+计数
+        Result<List<ShortLinkGroupCountQueryRespDTO>> listResult = shortLinkActualRemoteService.listGroupShortLinkCount(gidList);  //所有分组对应编号+计数
         if(listResult==null){
             throw new ClientException(GROUP_QUERY_ERROR);
         }
