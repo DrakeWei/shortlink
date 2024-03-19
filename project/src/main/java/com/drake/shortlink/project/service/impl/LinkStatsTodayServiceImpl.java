@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.drake.shortlink.project.dao.entity.LinkStatsTodayDO;
 import com.drake.shortlink.project.dao.mapper.LinkStatsTodayMapper;
 import com.drake.shortlink.project.service.LinkStatsTodayService;
+import org.springframework.stereotype.Service;
 
+@Service
 public class LinkStatsTodayServiceImpl extends ServiceImpl<LinkStatsTodayMapper, LinkStatsTodayDO> implements LinkStatsTodayService {
 }

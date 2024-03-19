@@ -14,4 +14,6 @@ public class RedisCacheConstant {
     public static final String LINK_STATS_IP="link:stats:ip:";
     //短链接编辑查询时的读写锁
     public static final String LINK_UPDATE_LOCK="lock:link:update:";
+    //存储访问数据幂等KEY
+    public static final String MQ_STATS_CONSUME_KEY="mq:stats:consume:";
 }

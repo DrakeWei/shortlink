@@ -1,6 +1,5 @@
 package com.drake.shortlink.admin.common.biz.user;
 
-import cn.hutool.core.io.resource.ClassPathResource;
 import com.alibaba.fastjson2.JSON;
 import com.drake.shortlink.admin.common.config.UserFlowRiskControlConfiguration;
 import com.drake.shortlink.admin.common.convention.exception.ClientException;
@@ -11,10 +10,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
-import org.springframework.scripting.support.ResourceScriptSource;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -39,7 +37,7 @@ public class UserFlowRiskControlFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         DefaultRedisScript<Long> redisScript=new DefaultRedisScript<>();
-        redisScript.setScriptSource(new ResourceScriptSource((Resource) new ClassPathResource(USER_FLOW_RISK_CONTROL_LUA_SCRIPT_PATH)));
+        redisScript.setLocation(new ClassPathResource(USER_FLOW_RISK_CONTROL_LUA_SCRIPT_PATH));
         redisScript.setResultType(Long.class);
         String username = UserContext.getUsername();
         if(username!=null){

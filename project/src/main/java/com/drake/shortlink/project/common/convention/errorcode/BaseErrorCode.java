@@ -45,8 +45,9 @@ public enum BaseErrorCode implements IErrorCode {
     RECYCLE_REMOVE_ERROR("A000702","短链接删除失败"),
 
     // ========== 二级宏观错误码 短链接监控错误 ==========
-    STATS_UPDATE_ERROR("A000800","监控数据失败"),
+    STATS_UPDATE_ERROR("A000800","监控数据更新失败"),
     STATS_GET_ERROR("A000801","监控数据获取失败"),
+    COOKIES_GET_ERROR("A000802","请求Cookies获取失败"),
 
     // ========== 一级宏观错误码 系统执行出错 ==========
     SERVICE_ERROR("B000001", "系统执行出错"),

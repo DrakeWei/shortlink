@@ -2,6 +2,7 @@ package com.drake.shortlink.project.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.drake.shortlink.project.dao.entity.LinkStatsMessage;
 import com.drake.shortlink.project.dao.entity.ShortLinkDO;
 import com.drake.shortlink.project.dto.req.ShortLinkBatchCreateReqDTO;
 import com.drake.shortlink.project.dto.req.ShortLinkPageReqDTO;
@@ -29,4 +30,6 @@ public interface ShortLinkService extends IService<ShortLinkDO> {
     void restoreUrl(String shortUri, ServletRequest servletRequest, ServletResponse servletResponse) throws IOException;
 
     ShortLinkBatchCreateRespDTO batchCreateShortLink(ShortLinkBatchCreateReqDTO requestParam);
+
+    void saveShortLinkStats(LinkStatsMessage linkStatsMessage);
 }
