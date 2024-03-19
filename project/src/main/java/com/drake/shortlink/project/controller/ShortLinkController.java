@@ -42,20 +42,12 @@ public class ShortLinkController {
      */
     @GetMapping("/api/short-link/v1/page")
     public Result<IPage<ShortLinkPageRespDTO>> pageShortLink(ShortLinkPageReqDTO requestParam) {
-//        Map<String, Object> requestMap = new HashMap<>();
-//        requestMap.put("gid", requestParam.getGid());
-//        requestMap.put("current", requestParam.getCurrent());
-//        requestMap.put("size", requestParam.getSize());
-//        String actualUrl = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/page", requestMap);
-//        Type type = new TypeReference<Result<IPage<ShortLinkPageRespDTO>>>() {
-//        }.getType();
-//        return JSON.parseObject(actualUrl, type);
         return Results.success(shortLinkService.pageQuery(requestParam));
     }
 
     @GetMapping("/api/short-link/v1/count")
-    public Result<List<ShortLinkGroupCountQueryRespDTO>> listShortLinkGroup(@RequestParam List<String> gid){
-        return Results.success(shortLinkService.listShortLinkGroup(gid));
+    public Result<List<ShortLinkGroupCountQueryRespDTO>> listShortLinkGroup(@RequestParam List<String> gidList){
+        return Results.success(shortLinkService.listShortLinkGroup(gidList));
     }
 
     @PostMapping("/api/short-link/v1/update")

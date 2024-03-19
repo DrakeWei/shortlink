@@ -53,11 +53,11 @@ public interface ShortLinkActualRemoteService {
     /**
      * 查询分组短链接总量
      *
-     * @param requestParam 分组短链接总量请求参数
+     * @param gidList 分组短链接总量请求参数
      * @return 查询分组短链接总量响应
      */
     @GetMapping("/api/short-link/v1/count")
-    Result<List<ShortLinkGroupCountQueryRespDTO>> listGroupShortLinkCount(@RequestParam("requestParam") List<String> requestParam);
+    Result<List<ShortLinkGroupCountQueryRespDTO>> listGroupShortLinkCount(@RequestParam("gidList") List<String> gidList);
 
     /**
      * 根据 URL 获取标题
